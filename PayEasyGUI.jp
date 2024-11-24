@@ -1,0 +1,129 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class PayEasyGUI {
+    private JFrame frame;
+    private JTextField amountField;
+    private JLabel balanceLabel;
+    private int balance = 0;
+
+    public PayEasyGUI() {
+        frame = new JFrame("PayEasy - Digital Wallet");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 500);
+        frame.setLayout(new BorderLayout());
+
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(new Color(30, 144, 255));
+        headerPanel.setPreferredSize(new Dimension(500, 70));
+
+        JLabel headerLabel = new JLabel("PayEasy - Digital Wallet");
+        headerLabel.setForeground(Color.WHITE);
+        headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        headerPanel.add(headerLabel);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        mainPanel.setBackground(Color.WHITE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        balanceLabel = new JLabel("Balance: ₱" + balance);
+        balanceLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        mainPanel.add(balanceLabel, gbc);
+
+        JLabel amountLabel = new JLabel("Enter Amount:");
+        amountLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        mainPanel.add(amountLabel, gbc);
+
+        amountField = new JTextField(10);
+        amountField.setFont(new Font("Arial", Font.PLAIN, 18));
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        mainPanel.add(amountField, gbc);
+
+        JButton depositButton = new JButton("Deposit");
+        depositButton.setFont(new Font("Arial", Font.BOLD, 16));
+        depositButton.setBackground(new Color(50, 205, 50));
+        depositButton.setForeground(Color.WHITE);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        mainPanel.add(depositButton, gbc);
+
+        JButton withdrawButton = new JButton("Withdraw");
+        withdrawButton.setFont(new Font("Arial", Font.BOLD, 16));
+        withdrawButton.setBackground(new Color(255, 69, 0));
+        withdrawButton.setForeground(Color.WHITE);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        mainPanel.add(withdrawButton, gbc);
+
+        JPanel footerPanel = new JPanel();
+        footerPanel.setBackground(new Color(30, 144, 255));
+        footerPanel.setPreferredSize(new Dimension(500, 50));
+
+        JLabel footerLabel = new JLabel("Thank you for using PayEasy!");
+        footerLabel.setForeground(Color.WHITE);
+        footerLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        footerPanel.add(footerLabel);
+
+        frame.add(headerPanel, BorderLayout.NORTH);
+        frame.add(mainPanel, BorderLayout.CENTER);
+        frame.add(footerPanel, BorderLayout.SOUTH);
+
+        depositButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int amount = Integer.parseInt(amountField.getText());
+                    if (amount <= 0) {
+                        JOptionPane.showMessageDialog(frame, "Enter a valid amount!", "Error", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        balance += amount;
+                        balanceLabel.setText("Balance: ₱" + balance);
+                        JOptionPane.showMessageDialog(frame, "Deposited: ₱" + amount, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Invalid input! Enter numbers only.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                amountField.setText("");
+            }
+        });
+
+        withdrawButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int amount = Integer.parseInt(amountField.getText());
+                    if (amount > balance) {
+                        JOptionPane.showMessageDialog(frame, "Insufficient Balance!", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (amount <= 0) {
+                        JOptionPane.showMessageDialog(frame, "Enter a valid amount!", "Error", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        balance -= amount;
+                        balanceLabel.setText("Balance: ₱" + balance);
+                        JOptionPane.showMessageDialog(frame, "Withdrawn: ₱" + amount, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Invalid input! Enter numbers only.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                amountField.setText("");
+            }
+        });
+
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new PayEasyGUI();
+    }
+}
